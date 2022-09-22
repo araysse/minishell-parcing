@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/29 18:44:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/18 11:36:35 by araysse          ###   ########.fr       */
+/*   Created: 2022/09/07 09:37:30 by yel-aoun          #+#    #+#             */
+/*   Updated: 2022/09/14 11:32:36 by yel-aoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/shell.h"
 
-token_t	*init_token(int type, char* value)
+void	ft_put_env(t_shell *shell)
 {
-	token_t *token = calloc(1, sizeof(struct token_struct));
-	token->type = type;
-	token->value = value;
+	int	i;
 
-	return (token);
+	i = 0;
+	while (shell->env[i])
+	{
+		if (ft_strcmp(shell->export[i], ""))
+		{
+			printf("%s\n", shell->env[i]);
+		}
+		i++;
+	}
 }

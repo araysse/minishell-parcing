@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_tsplit.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/shell.h"
 
 int	count_word(char const *s, char c)
 {
@@ -64,7 +64,7 @@ int	ft_sep(const char *s, char c, int k)
 	return (k);
 }
 
-char	**ft_split(const char *s, char c)
+char	**ft_tsplit(const char *s, char c)
 {
 	int		i;
 	int		j;

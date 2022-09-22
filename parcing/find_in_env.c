@@ -1,6 +1,6 @@
-#include "minishell.h"
+#include "../includes/shell.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int	ft_tstrncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
 
@@ -13,8 +13,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_tstrjoin(char *s1, char *s2)
 {
 	int		lens1;
 	char	*str;
@@ -25,7 +24,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	if (!s1)
 		return (s2);
-	str = malloc((ft_strlen(s1) + ft_strlen(s2) +1) * sizeof(char));
+	str = malloc((ft_tstrlen(s1) + ft_tstrlen(s2) +1) * sizeof(char));
 	if (!str)
 		return (NULL);
 	while (s1[i])
@@ -51,7 +50,7 @@ static int	min(int a, int b)
 	return (b);
 }
 
-char	*ft_substr(char *s, unsigned int start, size_t len)
+char	*ft_tsubstr(char *s, unsigned int start, size_t len)
 {
 	char			*str;
 	size_t			i;
@@ -60,13 +59,13 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	i = 0;
 	if (!s)
 		return (0);
-	if (start >= (unsigned int)ft_strlen(s))
+	if (start >= (unsigned int)ft_tstrlen(s))
 	{
 		str = malloc(1);
 		str[0] = '\0';
 		return (str);
 	}
-	size_sub_str = min(ft_strlen(s) - start, len);
+	size_sub_str = min(ft_tstrlen(s) - start, len);
 	str = malloc((size_sub_str + 1));
 	if (str == 0)
 		return (NULL);
@@ -88,16 +87,16 @@ char    *ft_find_in_path(char **env, char *str)
 
     j = 0;
     i = 0;
-    arg = ft_strjoin(str, "=");
+    arg = ft_tstrjoin(str, "=");
     while (env[i])
     {
-        j = ft_strncmp(env[i], arg, ft_strlen(arg));
+        j = ft_tstrncmp(env[i], arg, ft_tstrlen(arg));
         if(!j)
             break;
         i++;
     }
     if (!j)
-        save = ft_substr(env[i], ft_strlen(arg), ft_strlen(env[i] + 5));
+        save = ft_tsubstr(env[i], ft_tstrlen(arg), ft_tstrlen(env[i] + 5));
     else
         save = "";
     return (save);

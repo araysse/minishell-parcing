@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 12:06:37 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/18 15:08:21 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/22 16:30:02 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct token_struct
 	char 	*value;
 } token_t;
 // fuction extern
-unsigned int	ft_strlen(char *str);
+unsigned int	ft_tstrlen(char *str);
 // lexer_struct
 lexer_t		*init_lexer(char *contents);
 
@@ -76,10 +76,10 @@ token_t	*init_token(int type, char *value);
 
 // pars
 char    *ft_find_in_path(char **env, char *str);
-char	*ft_substr(char *s, unsigned int start, size_t len);
-//static int	min(int a, int b);
-char	*ft_strjoin(char *s1, char *s2);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*ft_tsubstr(char *s, unsigned int start, size_t len);
+// static int	min(int a, int b);
+char	*ft_tstrjoin(char *s1, char *s2);
+int		ft_tstrncmp(const char *s1, const char *s2, size_t n);
 char	*find_in_env(lexer_t *lexer, char **env);
 char	*get_alnum(char *str, lexer_t *lexer);
 char	*find_in_env2(lexer_t *lexer, char **env);
@@ -92,5 +92,6 @@ void 	collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, 
 t_redirection	*struct_redir(token_t *token, lexer_t *lexer, char **env);
 void	ft_lstadd_bak(t_redirection **alst, t_redirection *new);
 void	ft_lstnew(t_cmd **cmd, t_redirection* redir, char* str);
-char	**ft_split(const char *s, char c);
+char	**ft_tsplit(const char *s, char c);
+char	*ft_eror(int i);
 #endif

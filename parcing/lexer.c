@@ -6,11 +6,11 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:06:52 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/18 13:53:45 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/22 16:34:58 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/shell.h"
 
 lexer_t		*init_lexer(char *contents)
 {
@@ -24,7 +24,7 @@ lexer_t		*init_lexer(char *contents)
 
 void	lexer_advance(lexer_t *lexer)
 {
-	if (lexer->c != '\0' && lexer->i < ft_strlen(lexer->contents))
+	if (lexer->c != '\0' && lexer->i < ft_tstrlen(lexer->contents))
 	{
 		lexer->i += 1;
 		lexer->c = lexer->contents[lexer->i];
@@ -40,7 +40,7 @@ void	lexer_skip_whitespace(lexer_t *lexer)
 }
 token_t	*lexer_get_next_token(lexer_t *lexer, char **env)
 {
-	while (lexer->c != '\0' &&  lexer->i < ft_strlen(lexer->contents))
+	while (lexer->c != '\0')
 	{
 		if (lexer->c == ' ' || lexer->c ==  10)
 			lexer_skip_whitespace(lexer);
@@ -52,7 +52,7 @@ token_t	*lexer_get_next_token(lexer_t *lexer, char **env)
 			return(lexer_advance_with_token(lexer, init_token(token_pipe, lexer_get_current_char_as_atring(lexer))));
 		return lexer_collect_id(lexer, env);
 	}
-	return (void*)0;
+	return (NULL);
 }
 
 char	*lexer_collect_string(lexer_t *lexer, char **env)
@@ -61,17 +61,19 @@ char	*lexer_collect_string(lexer_t *lexer, char **env)
 	char *value = calloc(1, sizeof(char));
 	char	*s;
 	value[0] = '\0';
+	printf("l------------l %s\n", value);
+		
 	while (lexer->c != '"')
 	{
-		//char	*s = lexer_get_current_char_as_atring(lexer);
+		if (lexer->contents[lexer->i + 1] == '\0')
+			return (ft_eror(1));
 		s = find_in_env(lexer, env);
-		value = realloc(value, (ft_strlen(value) + ft_strlen(s) + 1) * sizeof(char));
+		value = realloc(value, (ft_tstrlen(value) + ft_tstrlen(s) + 1) * sizeof(char));
 		ft_strcat(value, s);
 		
 		lexer_advance(lexer);
 	}
 	//lexer_advance(lexer);
-	//printf("l------------l %s\n", value);
 	return (value);
 }
 
@@ -89,20 +91,19 @@ token_t *lexer_collect_id(lexer_t *lexer, char **env)
 	
 	value[0] = '\0';
 	str = NULL;
-	while (isalnum(lexer->c) || lexer->c == '$')
+	while (lexer->c != ' ' && lexer->c && lexer->c != '"' && lexer->c != '\'')
 	{
 		char	*s = find_in_env2(lexer, env);
 			
-		value = realloc(value, (ft_strlen(value) + ft_strlen(s) + 1) * sizeof(char));
+		value = realloc(value, (ft_tstrlen(value) + ft_tstrlen(s) + 1) * sizeof(char));
 		strcat(value, s);
-
 		lexer_advance(lexer);
 	}
 	if (lexer->c == '"')
 		str = lexer_collect_string(lexer, env);
 	if (lexer->c == '\'')
 		str = lexer_collect_single_quot(lexer);
-	value = realloc(value, (ft_strlen(value) + ft_strlen(str) + 1) * sizeof(char));
+	value = realloc(value, (ft_tstrlen(value) + ft_tstrlen(str) + 1) * sizeof(char));
 	ft_strcat(value, str);
 	lexer_advance(lexer);
 	
@@ -158,7 +159,7 @@ char	*lexer_collect_single_quot(lexer_t *lexer)
 	while (lexer->c != '\'')
 	{
 		char	*s = lexer_get_current_char_as_atring(lexer);
-		value = realloc(value, (ft_strlen(value) + ft_strlen(s) + 1) * sizeof(char));
+		value = realloc(value, (ft_tstrlen(value) + ft_tstrlen(s) + 1) * sizeof(char));
 		strcat(value, s);
 		
 		lexer_advance(lexer);
@@ -166,4 +167,14 @@ char	*lexer_collect_single_quot(lexer_t *lexer)
 	lexer_advance(lexer);
 	
 	return (value);
+}
+
+char	*ft_eror(int i)
+{
+	if (i == 1)
+	{
+		printf("unclosed quots\n");
+		return (NULL);
+	}
+	return (0);
 }
