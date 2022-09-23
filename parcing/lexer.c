@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:06:52 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/22 16:34:58 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/23 11:07:40 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,8 @@ char	*lexer_collect_single_quot(lexer_t *lexer)
 	value[0] = '\0';
 	while (lexer->c != '\'')
 	{
+		if (lexer->contents[lexer->i + 1] == '\0')
+			return (ft_eror(1));
 		char	*s = lexer_get_current_char_as_atring(lexer);
 		value = realloc(value, (ft_tstrlen(value) + ft_tstrlen(s) + 1) * sizeof(char));
 		strcat(value, s);

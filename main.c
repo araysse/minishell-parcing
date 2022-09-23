@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/22 18:53:26 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/23 11:08:48 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,13 +172,11 @@ int main(int ac, char **av, char **env)
 			(void) (av);
 			while ((token = lexer_get_next_token(lexer, shell->env )) != NULL)
 			{
-				//printf("%s\n", token->value);
 				while (token->type != token_pipe)
 				{
 					if (is_redirection(token))
 					{
 						ft_lstadd_bak(&redir, struct_redir(token, lexer, shell->env));
-						//printf("heere\n");
 					}
 					else
 						str = struct_cmd(lexer, token, str, shell->env);
@@ -190,12 +188,13 @@ int main(int ac, char **av, char **env)
 				new->next = NULL;
 				ft_lstadd_back(&cmd, new);
 				redir = NULL;
-				free(str);
+				str = NULL;
 			}
 			pr_struct(cmd);
 			// printf("%s\n", cmd->cmd[0]);
 			// ft_get_exec(shell, cmd);
 			ft_free_struct(&cmd);
+			free (str);
 		}
 	}
 }
