@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/24 14:24:49 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/24 18:15:10 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,14 @@ void	ppp_struct(t_redirection *str)
 
 void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, char **env)
 {
+	token_t	*tok1;
+	
+	tok1 = lexer_get_next_token(lexer, env);
 	redir->type = token->value;
-	redir->value = (lexer_get_next_token(lexer, env))->value;
+	if (tok1 == NULL)
+		redir->value = NULL;
+	else if (tok1->type == token_word)
+		redir->value = tok1->value;
 }
 
 char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
