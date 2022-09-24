@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/23 11:08:48 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/24 14:24:49 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,7 @@ int main(int ac, char **av, char **env)
 				str = NULL;
 			}
 			pr_struct(cmd);
-			// printf("%s\n", cmd->cmd[0]);
-			// ft_get_exec(shell, cmd);
+			// ft_get_exec(shell, cmd, redir);
 			ft_free_struct(&cmd);
 			free (str);
 		}
