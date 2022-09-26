@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:06:52 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/24 14:27:30 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/25 16:21:44 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ char	*lexer_collect_string(lexer_t *lexer, char **env)
 	char *value = calloc(1, sizeof(char));
 	char	*s;
 	value[0] = '\0';
-	printf("l------------l %s\n", value);
 		
 	while (lexer->c != '"')
 	{

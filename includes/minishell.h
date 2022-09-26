@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 12:06:37 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/23 14:07:26 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/26 11:15:48 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct redirec
 typedef struct t_comand
 {
 	char	**cmd;
+	int		infile;
+	int		outfile;
 	t_redirection	*redirection;
 	struct t_comand	*next;
 }	t_cmd;
