@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/26 11:19:28 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/27 11:46:25 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,21 +98,33 @@ void	ppp_struct(t_redirection *str)
 void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, char **env)
 {
 	token_t	*tok1;
+	lexer_t	*lexer1;
+	int		i;
 	
-	tok1 = lexer_get_next_token(lexer, env);
+	i = 0;
+	lexer1 = init_lexer(lexer->contents);
+	while (lexer1->i < lexer->i)
+		tok1 = lexer_get_next_token(lexer1, env);
+	tok1 = lexer_get_next_token(lexer1, env);
 	redir->type = token->value;
+	//printf(" tok1 next : %s\n", tok1->value);
 	if (tok1 == NULL)
 		redir->value = NULL;
 	else if (tok1->type != token_word)
 		redir->value = NULL;
 	else if (tok1->type == token_word)
+	{
 		redir->value = tok1->value;
+		lexer_get_next_token(lexer, env);
+	}
 }
 
 char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
 {
 	(void)lexer;
 	(void)env;
+	// if (str[0] == '\0')
+	// 	return (str);
 	str = ft_tstrjoin(str, token->value);
 	str = ft_tstrjoin(str, ft_getchar(127));
 
@@ -182,6 +194,7 @@ int main(int ac, char **av, char **env)
 			(void) (av);
 			while ((token = lexer_get_next_token(lexer, shell->env )) != NULL)
 			{
+				printf("ssstttrrrr,main : %s\n", token->value);
 				while (token->type != token_pipe)
 				{
 					if (is_redirection(token))

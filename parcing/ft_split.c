@@ -73,7 +73,7 @@ char	**ft_tsplit(const char *s, char c)
 
 	i = -1;
 	if (!(s) || s[0] == '\0')
-		return (calloc(1, sizeof(char *)));
+		return (NULL);
 	str = malloc(sizeof(char *) * (count_word(s, c) + 1));
 	if (!str)
 		return (NULL);
