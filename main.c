@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/27 11:46:25 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/27 14:28:38 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, c
 		tok1 = lexer_get_next_token(lexer1, env);
 	tok1 = lexer_get_next_token(lexer1, env);
 	redir->type = token->value;
-	//printf(" tok1 next : %s\n", tok1->value);
+	printf(" tok1 next : %s\n", tok1->value);
 	if (tok1 == NULL)
 		redir->value = NULL;
 	else if (tok1->type != token_word)
@@ -115,8 +115,10 @@ void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, c
 	else if (tok1->type == token_word)
 	{
 		redir->value = tok1->value;
-		lexer_get_next_token(lexer, env);
+		token = lexer_get_next_token(lexer, env);
 	}
+	// token = lexer_get_next_token(lexer, env);
+	printf(" token next : %s\n", token->value);
 }
 
 char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
