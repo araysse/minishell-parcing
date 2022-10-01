@@ -6,7 +6,7 @@
 #    By: araysse <araysse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/06 13:46:37 by yel-aoun          #+#    #+#              #
-#    Updated: 2022/09/23 16:57:38 by araysse          ###   ########.fr        #
+#    Updated: 2022/09/30 17:25:51 by araysse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC = main.c src/ft_builtins.c src/ft_init.c src/ft_exec.c utiles/utiles_1.c uti
 	parcing/ft_strcat.c parcing/find_env.c parcing/find_in_env.c parcing/ft_lstadd_back.c parcing/ft_split.c get_next/get_next_line.c \
 	get_next/get_next_line_utils.c
 
-CC = cc -Wall -Wextra -Werror  #-fsanitize=address
+CC = cc -Wall -Wextra -Werror  
+#-g -fsanitize=address 
 
 OBJ = $(SRC:.c=.o)
 LIB = libft/libft.a
@@ -26,16 +27,16 @@ LIB = libft/libft.a
 all :$(NAME)
 
 $(LIB) :
-	cd libft && make
+	@cd libft && make
 
 $(NAME) : $(LIB) $(OBJ)
-	$(CC) $(SRC) $(LIB) -o $(NAME) -lreadline #-L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include  #-fsanitize=address
+	@$(CC) $(OBJ) $(LIB) -lreadline -o $(NAME) #-L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include 
 
 clean :
-	rm -f $(OBJ) && cd libft && make clean
+	@rm -f $(OBJ) && cd libft && make clean
 
 fclean : clean
-	rm -f $(NAME) && cd libft && make fclean
+	@rm -f $(NAME) && cd libft && make fclean
 
 re : fclean all
 

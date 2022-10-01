@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/27 14:28:38 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/01 14:16:09 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, c
 		tok1 = lexer_get_next_token(lexer1, env);
 	tok1 = lexer_get_next_token(lexer1, env);
 	redir->type = token->value;
-	printf(" tok1 next : %s\n", tok1->value);
+	// printf(" tok1 next : %s\n", tok1->value);
 	if (tok1 == NULL)
 		redir->value = NULL;
 	else if (tok1->type != token_word)
@@ -118,7 +118,7 @@ void collect_redirection(t_redirection *redir, lexer_t *lexer, token_t *token, c
 		token = lexer_get_next_token(lexer, env);
 	}
 	// token = lexer_get_next_token(lexer, env);
-	printf(" token next : %s\n", token->value);
+	// printf(" token next : %s\n", token->value);
 }
 
 char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
@@ -168,6 +168,23 @@ t_redirection	*struct_redir(token_t *token, lexer_t *lexer, char **env)
 	return (redir);
 }
 
+void	ft_sig_int(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		// rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
+void	ft_exit_sig(char *str)
+{
+	printf("%s\n", str);
+	exit(0);
+}
+
 int main(int ac, char **av, char **env)
 {
 	t_shell	*shell;
@@ -182,10 +199,16 @@ int main(int ac, char **av, char **env)
 	cmd = NULL;
 	shell = malloc(sizeof(t_shell));
 	ft_init_env(shell, env);
+	g_glob[1] = 0;
 	while(1)
 	{
 		str = NULL;
-        inpt = readline(YELLOW "minishell> " WHITE);
+		g_glob[0] = 0;
+		signal(SIGINT, ft_sig_int);
+		signal(SIGQUIT, SIG_IGN);
+        inpt = readline(YELLOW "bash-0.0 " WHITE);
+		if (!inpt)
+			ft_exit_sig("exit");
 		if (ft_strcmp(inpt, ""))
 		{
         	add_history(inpt);
@@ -196,7 +219,6 @@ int main(int ac, char **av, char **env)
 			(void) (av);
 			while ((token = lexer_get_next_token(lexer, shell->env )) != NULL)
 			{
-				printf("ssstttrrrr,main : %s\n", token->value);
 				while (token->type != token_pipe)
 				{
 					if (is_redirection(token))
@@ -208,7 +230,8 @@ int main(int ac, char **av, char **env)
 					if ((token = lexer_get_next_token(lexer, shell->env)) == NULL)
 						break;
 				}
-				// ppp_struct(redir);
+				// printf("tokennnn : %s\n", token->value);
+				ft_after_pipe(lexer, token, env);
 				ft_lstnew(&new, redir, str);
 				new->next = NULL;
 				ft_lstadd_back(&cmd, new);
@@ -216,9 +239,31 @@ int main(int ac, char **av, char **env)
 				str = NULL;
 			}
 			pr_struct(cmd);
-			// ft_get_exec(shell, cmd, redir);
+			// ft_get_exec(shell, cmd);
 			ft_free_struct(&cmd);
 			free (str);
+		}
+	}
+}
+
+void	ft_after_pipe(lexer_t *lexer, token_t *token, char **env)
+{
+	token_t	*tok2;
+	lexer_t	*lexer2;
+
+	int		i;
+	i = 0;
+	lexer2 = init_lexer(lexer->contents);
+	while (lexer2->i < lexer->i)
+		tok2 = lexer_get_next_token(lexer2, env);
+	printf ("tok2 value : %s\n", tok2->value);
+	if (token != NULL)
+	{ 
+		if (token->type == token_pipe && (tok2 = lexer_get_next_token(lexer2, env)) == NULL)
+		{
+			printf("bash: syntax error near unexpected token `|'\n");
+			g_glob[0] = 1;
+			g_glob[1] = 258;
 		}
 	}
 }

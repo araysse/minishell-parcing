@@ -6,7 +6,7 @@
 /*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:39:10 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/23 13:37:24 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/09/29 10:43:03 by yel-aoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,59 @@ void	ft_creat_pipes(t_shell *shell, int k)
 		pipe(shell->pipes[0]);
 }
 
-void	first_c(char **cmd, t_shell *shell, int k)
+void	first_c(t_cmd *cmd, t_shell *shell, int k)
 {
-	if (k > 0)
+	int	builtin;
+	builtin = 0;
+	if (cmd->cmd[0] == NULL)
+	{
+		if (k > 0)
+		{
+			close(shell->pipes[0][0]);
+			close(shell->pipes[0][1]);
+		}
+		if(cmd->infile != 0)
+		{
+			close(cmd->infile);
+			close(cmd->outfile);
+		}
+		exit(0);
+	}
+	else if (k > 0)
 	{
 		close(shell->pipes[0][0]);
-		dup2(shell->pipes[0][1], 1);
+		if (cmd->infile != 0)
+		{
+			close (cmd->infile);
+			close(cmd->outfile);
+		}
+		if (shell->out == 0)
+			dup2(shell->pipes[0][1], 1);
 		close(shell->pipes[0][0]);
 		close(shell->pipes[0][1]);
 	}
-	ft_get_cmd(shell, cmd);
-	execve(shell->command_path, cmd, shell->env);
-	perror("");
+	else if(cmd->infile != 0)
+	{
+		close(cmd->infile);
+		close(cmd->outfile);
+	}
+	builtin = ft_check_builtins(shell, cmd);
+	if (!builtin)
+	{
+		ft_get_cmd(shell, cmd->cmd);
+		execve(shell->command_path, cmd->cmd, shell->env);
+	}
+	exit(0);
+	// perror("");
 }
 
-void	between_c(char **cmd, t_shell *shell, int i)
+void	between_c(t_cmd	*cmd, t_shell *shell, int i)
 {
 	pid_t	pid;
+	int		builtin;
 
 	pid = fork();
+	builtin = 0;
 	if (pid == -1)
 	{
 		printf("bash: fork: Resource temporarily unavailable\n");
@@ -56,27 +90,72 @@ void	between_c(char **cmd, t_shell *shell, int i)
 	}
 	if (pid == 0)
 	{
+		ft_open_files(shell, cmd);
+		if (shell->exit_creat == 1)
+			exit (1);
+		if (cmd->cmd[0] == NULL)
+		{
+			if(cmd->infile != 0)
+			{
+				close(cmd->infile);
+				close(cmd->outfile);
+			}
+			exit(0);
+		}
 		close(shell->pipes[i][1]);
 		close(shell->pipes[i + 1][0]);
-		dup2(shell->pipes[i][0], 0);
-		dup2(shell->pipes[i + 1][1], 1);
+		if (cmd->infile != 0)
+		{
+			close(cmd->infile);
+			close(cmd->outfile);
+		}
+		else if (shell->in == 0)
+			dup2(shell->pipes[i][0], 0);
+		if (shell->out == 0)
+			dup2(shell->pipes[i + 1][1], 1);
 		close(shell->pipes[i][0]);
 		close(shell->pipes[i][1]);
 		close(shell->pipes[i + 1][0]);
 		close(shell->pipes[i + 1][1]);
-		ft_get_cmd(shell, cmd);
-		execve(shell->command_path, cmd, shell->env);
-		perror("");
+		builtin = ft_check_builtins(shell, cmd);
+		if (!builtin)
+		{
+			ft_get_cmd(shell, cmd->cmd);
+			execve(shell->command_path, cmd->cmd, shell->env);
+		}
+		exit(0);
 	}
 }
 
-void	last_c(char **cmd, t_shell *shell, int i)
+void	last_c(t_cmd *cmd, t_shell *shell, int i)
 {
+	int	builtin;
+
+	builtin = 0;
+	if (cmd->cmd[0] == NULL)
+	{
+		close(shell->pipes[i][0]);
+		close(shell->pipes[i][1]);
+		close(cmd->infile);
+		close(cmd->outfile);
+		exit(0);
+	}
 	close(shell->pipes[i][1]);
-	dup2(shell->pipes[i][0], 0);
+	if (cmd->infile != 0)
+	{
+		close(cmd->infile);
+		close(cmd->outfile);
+	}
+	else if (shell->in == 0)
+		dup2(shell->pipes[i][0], 0);
 	close(shell->pipes[i][0]);
 	close(shell->pipes[i][1]);
-	ft_get_cmd(shell, cmd);
-	execve(shell->command_path, cmd, shell->env);
-	perror("");
+	builtin = ft_check_builtins(shell, cmd);
+	if (!builtin)
+	{
+		ft_get_cmd(shell, cmd->cmd);
+		execve(shell->command_path, cmd->cmd, shell->env); 
+	}
+	exit(0);
+	// perror("");
 }

@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 12:06:37 by araysse           #+#    #+#             */
-/*   Updated: 2022/09/26 11:36:47 by araysse          ###   ########.fr       */
+/*   Updated: 2022/09/30 11:19:39 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct redirec
 typedef struct t_comand
 {
 	char	**cmd;
+	int 	fd[2];
 	int		infile;
 	int		outfile;
 	t_redirection	*redirection;
@@ -96,4 +97,5 @@ void	ft_lstadd_bak(t_redirection **alst, t_redirection *new);
 void	ft_lstnew(t_cmd **cmd, t_redirection* redir, char* str);
 char	**ft_tsplit(const char *s, char c);
 char	*ft_eror(int i);
+void	ft_after_pipe(lexer_t *lexer, token_t *token, char **env);
 #endif
