@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/09 14:52:47 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/29 10:36:49 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/03 17:45:48 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	ft_open_files(t_shell *shell, t_cmd *command)
 {
 	int 			i;
 	t_cmd			*cmd;
-	t_redirection	*redirection;
+	t_redir	*redirection;
 
 	i = 0;
 	shell->exit_creat = 0;
@@ -137,7 +137,7 @@ void	ft_open_files(t_shell *shell, t_cmd *command)
 void	ft_close_files(t_cmd *command)
 {
 	t_cmd *cmd;
-	t_redirection *redirection;
+	t_redir *redirection;
 
 	cmd = command;
 	while (cmd)

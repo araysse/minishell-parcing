@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 13:56:56 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/28 17:58:51 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/03 17:45:48 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_check_valide_files(t_shell *shell, t_cmd *command)
 {
 	int 			i;
 	t_cmd			*cmd;
-	t_redirection	*redirection;
+	t_redir	*redirection;
 
 	i = 0;
 	shell->err = 0;
@@ -41,7 +41,7 @@ void	ft_check_valide_files(t_shell *shell, t_cmd *command)
 int	ft_count_herdoc_pipes(t_cmd *command)
 {
     t_cmd   *cmd;
-    t_redirection *redirection;
+    t_redir *redirection;
     int     i;
 	int		j;
 
@@ -83,7 +83,7 @@ void    ft_create_pipes_heredoc(t_shell *shell, int k)
 		i++;
 	}
 }
-void	ft_open_heredoc(t_shell *shell, t_redirection *redirection, int i)
+void	ft_open_heredoc(t_shell *shell, t_redir *redirection, int i)
 {
 	int		j;
 	char	*limiter;
@@ -109,7 +109,7 @@ void	ft_open_heredoc(t_shell *shell, t_redirection *redirection, int i)
 void    ft_check_her_doc(t_shell *shell, t_cmd *command, int k)
 {
     t_cmd   *cmd;
-	t_redirection *redirection;
+	t_redir *redirection;
 	pid_t	id;
 	int		i;
 	int		new_neud;

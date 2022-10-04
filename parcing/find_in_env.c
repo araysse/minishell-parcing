@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   find_in_env.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/04 15:23:22 by araysse           #+#    #+#             */
+/*   Updated: 2022/10/04 15:37:28 by araysse          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/shell.h"
 
 int	ft_tstrncmp(const char *s1, const char *s2, size_t n)
@@ -34,11 +46,7 @@ char	*ft_tstrjoin(char *s1, char *s2)
 	}
 	lens1 = 0;
 	while (s2[lens1])
-	{
-		str[i] = ((char *)s2)[lens1];
-		i++;
-		lens1++;
-	}
+		str[i++] = ((char *)s2)[lens1++];
 	str[i] = '\0';
 	return (str);
 }
@@ -72,38 +80,32 @@ char	*ft_tsubstr(char *s, unsigned int start, size_t len)
 	while (i < size_sub_str)
 	{
 		str[i] = s[i + start];
-		i++; 
+		i++;
 	}
 	str[i] = '\0';
 	return (str);
 }
 
-char    *ft_find_in_path(char **env, char *str)
+char	*f_in_path(char **env, char *str)
 {
-    char    *save;
-    char    *arg;
-    int i;
-    int j;
+	char	*save;
+	char	*arg;
+	int		i;
+	int		j;
 
-    j = 0;
-    i = 0;
-    arg = ft_tstrjoin(str, "=");
-    while (env[i])
-    {
-        j = ft_tstrncmp(env[i], arg, ft_tstrlen(arg));
-        if(!j)
-            break;
-        i++;
-    }
-    if (!j)
-        save = ft_tsubstr(env[i], ft_tstrlen(arg), ft_tstrlen(env[i] + 5));
-    else
-        save = "";
-    return (save);
+	j = 0;
+	i = 0;
+	arg = ft_tstrjoin(str, "=");
+	while (env[i])
+	{
+		j = ft_tstrncmp(env[i], arg, ft_tstrlen(arg));
+		if (!j)
+			break ;
+		i++;
+	}
+	if (!j)
+		save = ft_tsubstr(env[i], ft_tstrlen(arg), ft_tstrlen(env[i] + 5));
+	else
+		save = "";
+	return (save);
 }
-
-// int main(int argc, char **argv, char **env)
-// {
-//     (void) argc;
-//     printf("%s\n", ft_find_in_path(env, argv[1]));
-// }
