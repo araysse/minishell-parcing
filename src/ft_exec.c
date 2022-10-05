@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 13:56:56 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/10/03 17:45:48 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/04 18:28:41 by yel-aoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/shell.h"
+#include "../includes/shell.h"
 
 void	ft_check_valide_files(t_shell *shell, t_cmd *command)
 {
-	int 			i;
+	int				i;
 	t_cmd			*cmd;
 	t_redir	*redirection;
 
@@ -24,13 +24,16 @@ void	ft_check_valide_files(t_shell *shell, t_cmd *command)
 	while (cmd)
 	{
 		redirection = cmd->redirection;
-		while(redirection)
+		while (redirection)
 		{
-			if((ft_strcmp(redirection->type, "<") == 0 && redirection->value == NULL))
+			if ((ft_strcmp(redirection->type, "<") == 0 && \
+				redirection->value == NULL))
 				shell->err = 1;
-			else if((ft_strcmp(redirection->type, ">") == 0 && redirection->value == NULL))
+			else if ((ft_strcmp(redirection->type, ">") == 0 && \
+				redirection->value == NULL))
 				shell->err = 1;
-			else if((ft_strcmp(redirection->type, ">>") == 0 && redirection->value == NULL))
+			else if ((ft_strcmp(redirection->type, ">>") == 0 && \
+				redirection->value == NULL))
 				shell->err = 1;
 			redirection = redirection->next;
 		}
@@ -40,36 +43,36 @@ void	ft_check_valide_files(t_shell *shell, t_cmd *command)
 
 int	ft_count_herdoc_pipes(t_cmd *command)
 {
-    t_cmd   *cmd;
-    t_redir *redirection;
-    int     i;
+	t_cmd	*cmd;
+	t_redir	*redirection;
+	int		i;
 	int		j;
 
-    cmd = command;
+	cmd = command;
 	i = 0;
 	j = 0;
-    while (cmd)
-    {
+	while (cmd)
+	{
 		j = 0;
-        redirection = cmd->redirection;
-        while (redirection)
-        {
+		redirection = cmd->redirection;
+		while (redirection)
+		{
 			if (j == 0)
 			{
-				if (ft_strcmp(redirection->type, "<<") == 0)
+				if (ft_strcmp (redirection->type, "<<") == 0)
 				{
 					i++;
 					j = 1;
 				}
 			}
-            redirection= redirection->next;
-        }
-        cmd = cmd->next;
-    }
+			redirection = redirection->next;
+		}
+		cmd = cmd->next;
+	}
 	return (i);
 }
 
-void    ft_create_pipes_heredoc(t_shell *shell, int k)
+void	ft_create_pipes_heredoc(t_shell *shell, int k)
 {
 	int	i;
 
@@ -83,6 +86,7 @@ void    ft_create_pipes_heredoc(t_shell *shell, int k)
 		i++;
 	}
 }
+
 void	ft_open_heredoc(t_shell *shell, t_redir *redirection, int i)
 {
 	int		j;
@@ -92,39 +96,51 @@ void	ft_open_heredoc(t_shell *shell, t_redir *redirection, int i)
 	close(shell->pip_herdoc[i][0]);
 	while (1)
 	{
-	    j = 1;
-	    limiter = readline("> ");
-	    j = ft_strncmp(limiter, redirection->value, \
-	        ft_is_longer(limiter, redirection->value));
-	    if (j)
+		j = 1;
+		signal(SIGINT, SIG_DFL);
+		limiter = readline("> ");
+		if (!limiter)
 		{
-		    write(shell->pip_herdoc[i][1], limiter, ft_strlen(limiter));
-	        write(shell->pip_herdoc[i][1], "\n", 1);
+			free(limiter);
+			g_glob[1] = 0;
+			exit(0);
 		}
-	    else
-		    break ;
+		j = ft_strncmp(limiter, redirection->value, \
+			ft_is_longer(limiter, redirection->value));
+		if (j)
+		{
+			write(shell->pip_herdoc[i][1], limiter, ft_strlen(limiter));
+			write(shell->pip_herdoc[i][1], "\n", 1);
+		}
+		else
+		{
+			free(limiter);
+			break ;
+		}
 	}
 }
 
-void    ft_check_her_doc(t_shell *shell, t_cmd *command, int k)
+void	ft_check_her_doc(t_shell *shell, t_cmd *command)
 {
-    t_cmd   *cmd;
-	t_redir *redirection;
-	pid_t	id;
-	int		i;
-	int		new_neud;
+	t_cmd			*cmd;
+	t_redir	*redirection;
+	pid_t			id;
+	int				i;
+	int				seg;
+	int				new_neud;
 
 	cmd = command;
-	k = 0;
 	i = -1;
 	new_neud = 0;
-    while (cmd)
-    {
+	seg = 0;
+	shell->t_sig_c = 0;
+	while (cmd)
+	{
 		redirection = cmd->redirection;
 		if (redirection)
 			new_neud = 1;
-        while(redirection)
-        {
+		while (redirection)
+		{
 			if (ft_strcmp(redirection->type, "<<") == 0)
 			{
 				if (new_neud == 1)
@@ -135,54 +151,56 @@ void    ft_check_her_doc(t_shell *shell, t_cmd *command, int k)
 				if (redirection->value == NULL)
 				{
 					shell->h_c = 1;
-					printf("bash: syntax error near unexpected token\n");
-					break;
+					printf("bash: syntax error near unexpected \
+						token `newline'\n");
+					break ;
 				}
 				pipe(shell->pip_herdoc[i]);
-				// pipe(cmd->fd);
 				id = fork();
-    			if (id == 0)
+				if (id == 0)
 				{
 					ft_open_heredoc(shell, redirection, i);
 					exit (0);
 				}
 				else
-       				wait(NULL);	
-			cmd->infile = shell->pip_herdoc[i][0];
-			cmd->outfile = shell->pip_herdoc[i][1];
-			close(cmd->outfile);
-			// printf("%d\n", cmd->infile);
-			// printf("%d\n", cmd->outfile);
+					waitpid(id, &seg, 0);
+				if (seg == 2)
+				{
+					shell->t_sig_c = 1;
+					g_glob[1] = 1;
+					//ft_close_insegnals(shell, i);
+					break ;
+				}
+				cmd->infile = shell->pip_herdoc[i][0];
+				cmd->outfile = shell->pip_herdoc[i][1];
+				close(cmd->outfile);
 			}
-            redirection = redirection->next;
-        }
+			redirection = redirection->next;
+		}
+		if (shell->t_sig_c == 1)
+			break ;
 		new_neud = 0;
-        cmd = cmd->next;
-    }
-	cmd = command;
-	redirection = cmd->redirection;
-	// ft_open_files(shell, cmd);
+		cmd = cmd->next;
+	}
 }
-// void    ft_open_files(t_shell *shell, t_cmd *cmd)
-// {
-    
-// }
 
-void    ft_get_exec(t_shell *shell, t_cmd *cmd) 
-{   
-	int	k;
+void	ft_get_exec(t_shell *shell, t_cmd *command)
+{
+	int		k;
+	t_cmd	*cmd;
 
 	k = 0;
+	cmd = command;
 	shell->h_c = 0;
 	ft_check_valide_files(shell, cmd);
 	if (shell->err == 0)
 	{
 		k = ft_count_herdoc_pipes(cmd);
 		ft_create_pipes_heredoc(shell, k);
-    	ft_check_her_doc(shell, cmd, k);
-		if (shell->h_c == 0)
-    		exec(shell, cmd);
+		ft_check_her_doc(shell, cmd);
+		if (shell->h_c == 0 && shell->t_sig_c == 0)
+			exec(shell, cmd);
 	}
 	else
-		printf("bash: syntax error near unexpected token\n");
+		printf("bash: syntax error near unexpected token `newline '\n");
 }

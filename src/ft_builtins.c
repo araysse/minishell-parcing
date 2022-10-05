@@ -6,7 +6,7 @@
 /*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 11:53:54 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/24 14:18:23 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:38:48 by yel-aoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,25 @@ char	*ft_lower(char *str)
 	return (str);
 }
 
-int	ft_check_builtins(t_shell *shell, t_cmd *command)
+int	ft_help_check_builtin(t_cmd *cmd, t_shell *shell)
+{
+	int	k;
+
+	k = 0;
+	if (ft_strcmp(cmd->cmd[0], "cd") == 0)
+		k = ft_cd(shell, cmd);
+	else if (ft_strcmp(cmd->cmd[0], "export") == 0)
+		k = ft_put_export(shell, cmd);
+	else if (ft_strcmp (cmd->cmd[0], "unset") == 0)
+		k = ft_unset(shell, cmd);
+	return (k);
+}
+
+int	ft_check_builtins(t_shell *shell, t_cmd *command, int p)
 {
 	char	*cmp;
-	t_cmd 	*cmd;
-	int		k;                                                     /// i should add a struct to navigate in cmd without modifing in the real one
+	t_cmd	*cmd;
+	int		k;
 
 	k = 0;
 	cmd = command;
@@ -41,22 +55,18 @@ int	ft_check_builtins(t_shell *shell, t_cmd *command)
 	if (ft_strcmp(cmp, "echo") == 0)
 		k = ft_echo(cmd);
 	else if (ft_strcmp(cmp, "env") == 0)
-		k = ft_put_env(shell, cmd);
-	else if (ft_strcmp(cmd->cmd[0], "cd") == 0)
-		k = ft_cd(shell, cmd);
+		k = ft_put_env(shell, command);
 	else if (ft_strcmp(cmp, "pwd") == 0)
-		k = ft_put_pwd();
-	else if (ft_strcmp(cmd->cmd[0], "export") == 0)
-		k = ft_put_export(shell, cmd->cmd[1]);
-	else if (ft_strcmp (cmd->cmd[0], "unset") == 0)
-		k = ft_unset(shell, cmd);
+		k = ft_put_pwd(shell);
 	else if (ft_strcmp (cmd->cmd[0], "exit") == 0)
 	{
 		k = 1;
-		ft_exit(shell, cmd);
+		ft_exit(cmd, p);
 	}
-	// else
-	// 	printf("bash: %s: command not found\n", cmd->cmd[0]);
+	else
+		k = ft_help_check_builtin(cmd, shell);
 	free (cmp);
+	if (p == 0)
+		dup2(STDIN_FILENO, 1);
 	return (k);
 }

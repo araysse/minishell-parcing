@@ -6,13 +6,61 @@
 /*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 10:52:44 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/24 10:01:53 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/04 16:35:43 by yel-aoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-int is_digit(char *str)
+void	ft_norm4(char *str, unsigned long long sum, int j, \
+		unsigned long long numb)
+{
+	if (sum > numb && j == 1)
+	{
+		write(2, str, ft_strlen(str));
+		write(2, ": numeric argument required\n", 28);
+		g_glob[1] = 255;
+		exit(255);
+	}
+	else if (sum > (numb + 1) && j == -1)
+	{
+		write(2, str, ft_strlen(str));
+		write(2, ": numeric argument required\n", 28);
+		g_glob[1] = (255);
+		exit(255);
+	}
+}
+
+int	ft_toi(const char *s)
+{
+	long long			i;
+	int					sign;
+	unsigned long long	sum;
+
+	i = 0;
+	sign = 1;
+	sum = 0;
+	while (s[i] == ' ' || s[i] == '\t'
+		|| s[i] == '\v' || s[i] == '\f' || s[i] == '\r' || s[i] == '\n')
+		i++;
+	if (s[i] == '+' && s[i + 1] == '-')
+		return (0);
+	if (s[i] == '+')
+		i++;
+	if (s[i] == '-')
+	{
+		sign = sign * (-1);
+		i++;
+	}
+	while (s[i] != '\0' && s[i] >= 48 && s[i] <= 57)
+	{
+		sum = sum * 10 + (s[i++] - '0');
+		ft_norm4((char *)s, sum, sign, 9223372036854775807);
+	}
+	return (sum * sign);
+}
+
+int	is_digit(char *str)
 {
 	int	i;
 
@@ -29,42 +77,49 @@ int is_digit(char *str)
 	return (1);
 }
 
-void	ft_exit(t_shell *shell, t_cmd *cmd)
+void	ft_exit_help(t_cmd *cmd)
 {
+	if (!is_digit(cmd->cmd[1]))
+	{
+		write (2, "bash: exit: ", 12);
+		write (2, cmd->cmd[1], ft_strlen(cmd->cmd[1]));
+		write (2, ": numeric argument required\n", 28);
+		g_glob[1] = 255;
+		exit (255);
+	}
+	else if (is_digit(cmd->cmd[1]) == 1)
+	{
+		ft_toi(cmd->cmd[1]);
+		g_glob[1] = (ft_atoi(cmd->cmd[1]) % 256);
+		exit (ft_atoi(cmd->cmd[1]) % 256);
+	}
+	else
+	{
+		g_glob[1] = 0;
+		exit(0);
+	}
+}
+
+void	ft_exit(t_cmd *cmd, int p)
+{
+	if (p == 0)
+		write (2, "exit\n", 5);
 	if (cmd->cmd[1] && cmd->cmd[2])
 	{
 		if (is_digit(cmd->cmd[1]))
 		{
-			printf("exit\n");
-			printf("bash: exit: too many arguments\n");
-			shell->exit_status = 1;
+			write (2, "bash: exit: too many arguments\n", 31);
+			g_glob[1] = 1;
 		}
 		else
 		{
-			printf("exit\n");
-			printf("bash: exit: %s: numeric argument required\n", cmd->cmd[1]);
+			write (2, "bash: exit: ", 12);
+			write (2, cmd->cmd[1], ft_strlen(cmd->cmd[1]));
+			write (2, ": numeric argument required\n", 28);
+			g_glob[1] = 255;
 			exit(255);
-			shell->exit_status = 255;
 		}
 	}
-    else if(!is_digit(cmd->cmd[1]))
-    {
-		printf("exit\n");
-		printf("bash: exit: %s: numeric argument required\n", cmd->cmd[1]);
-		exit (255);
-		shell->exit_status = (255);
-	}
-	else if(is_digit(cmd->cmd[1]) == 1)
-	{
-		printf("exit\n");
-		exit (ft_atoi(cmd->cmd[1]) % 256);
-		shell->exit_status = (ft_atoi(cmd->cmd[1]) % 256);
-	}
 	else
-	{
-		printf("exit\n");
-		exit(0);
-		shell->exit_status = 0;
-	}
-	//shell->exit_status = 0;
+		ft_exit_help(cmd);
 }

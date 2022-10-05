@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:00:57 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/04 15:10:53 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/05 12:56:14 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ lexer_t	*init_lexer(char *contents)
 	lexer_t	*lexer;
 
 	lexer = calloc(1, sizeof (struct lexer_struct));
-	lexer->contents = malloc(sizeof(char) * ft_strlen(contents) + 1);
 	lexer->contents = contents;
 	lexer->i = 0;
 	lexer->c = contents[lexer->i];
@@ -47,15 +46,20 @@ char	*lexer_collect_string(lexer_t *lexer, char **env)
 	v = calloc(1, sizeof(char));
 	lexer_advance(lexer);
 	v[0] = '\0';
-	while (lexer->c != '"')
+	if (lexer->c)
 	{
-		if (lexer->contents[lexer->i + 1] == '\0' || lexer->c == '\0')
-			return (ft_eror(1));
-		s = find_in_env(lexer, env);
-		v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
-		ft_strcat(v, s);
+		while (lexer->c != '"')
+		{
+			if (lexer->contents[lexer->i + 1] == '\0' || lexer->c == '\0')
+				return (ft_eror(1));
+			s = find_in_env(lexer, env);
+			v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
+			ft_strcat(v, s);
+			lexer_advance(lexer);
+		}
 		lexer_advance(lexer);
 	}
-	lexer_advance(lexer);
+	else
+		return (ft_eror(1));
 	return (v);
 }

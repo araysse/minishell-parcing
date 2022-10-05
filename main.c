@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/04 15:38:51 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/05 14:20:51 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,22 @@ void	function(t_cmd **cmd, lexer_t **lexer, char **env, token_t **token)
 			ft_lstadd_bak(&redir, struct_redir((*token), (*lexer), env));
 		else
 			str = struct_cmd((*lexer), (*token), str, env);
+		// system("leaks minishell");
+		//free ((*token)->value);
+		free (*token);
 		(*token) = lexer_next((*lexer), env);
+		// system("leaks minishell");
 		if ((*token) == NULL)
 			break ;
 	}
-	if (*token)
-		ft_after_pipe((*lexer), (*token), env);
+	// if (*token)
+	// 	ft_after_pipe((*lexer), (*token), env);
 	ft_lstnew(&new, &(*redir), str);
 	new->next = NULL;
 	ft_lstadd_back(&(*cmd), new);
 	redir = NULL;
 	str = NULL;
+	free(str);
 }
 
 void	ft_help_main2(t_cmd **cmd, lexer_t **lexer, char **env)
@@ -79,27 +84,29 @@ void	ft_help_main2(t_cmd **cmd, lexer_t **lexer, char **env)
 	{
 		function(&(*cmd), &(*lexer), env, &token);
 		token = lexer_next((*lexer), env);
+		// system("leaks minishell");
 	}
 }
 
-void	ft_help_main1(t_cmd **cmd, char **env)
+void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 {
 	char	*inpt;
 	lexer_t	*lexer;
 
+	lexer = NULL;
 	inpt = readline(YELLOW "bash-0.0 " WHITE);
 	if (!inpt)
 	{
 		g_glob[1] = 0;
-		// ft_exit_sig("exit");
+		ft_exit_sig("exit");
 	}
 	if (ft_strcmp(inpt, ""))
 	{
 		add_history(inpt);
 		lexer = init_lexer(inpt);
-		ft_help_main2(&(*cmd), &lexer, env);
+		ft_help_main2(&(*cmd), &lexer, shell->env);
 		// if (g_glob[0] == 0)
-		// 	ft_get_exec(shell, cmd);
+		// 	ft_get_exec(shell, (*cmd));
 		pr_struct(*cmd);
 		ft_free_struct(&(*cmd));
 	}
@@ -121,6 +128,6 @@ int	main(int ac, char **av, char **env)
 		g_glob[0] = 0;
 		// signal(SIGINT, ft_sig_int);
 		// signal(SIGQUIT, SIG_IGN);
-		ft_help_main1(&cmd, shell->env);
+		ft_help_main1(&cmd, shell);
 	}
 }

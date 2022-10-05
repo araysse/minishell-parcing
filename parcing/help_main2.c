@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 18:57:50 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/04 11:49:58 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/05 14:46:15 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,12 @@ void	col_redir(t_redir *redir, lexer_t *lexer, token_t *token, char **env)
 	i = 0;
 	lexer1 = init_lexer(lexer->contents);
 	while (lexer1->i < lexer->i)
+	{
 		tok1 = lexer_next(lexer1, env);
+		free(tok1->value);
+	}
 	tok1 = lexer_next(lexer1, env);
+	system("leaks minishell");
 	redir->type = token->value;
 	if (tok1 == NULL)
 		redir->value = NULL;
@@ -33,6 +37,7 @@ void	col_redir(t_redir *redir, lexer_t *lexer, token_t *token, char **env)
 		redir->value = tok1->value;
 		token = lexer_next(lexer, env);
 	}
+	free(tok1);
 }
 
 char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
@@ -41,6 +46,7 @@ char	*struct_cmd(lexer_t *lexer, token_t *token, char *str, char **env)
 	(void)env;
 	str = ft_tstrjoin(str, token->value);
 	str = ft_tstrjoin(str, ft_getchar(127));
+
 	return (str);
 }
 
