@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:08:22 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/05 14:41:46 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/06 12:14:07 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ token_t	*lexer_collect_id(lexer_t *lexer, char **env)
 	ft_strcat(v, str);
 	free(str);
 	if (v && !v[0])
+	{
+		free(v);
 		return (init_tok(token_word, NULL));
+	}
 	return (init_tok(token_word, v));
 }
 
@@ -51,7 +54,7 @@ char	*lxr_as_str(lexer_t	*lexer)
 {
 	char	*str;
 
-	str = calloc(2, sizeof(char));
+	str = malloc(2 * sizeof(char));
 	str[0] = lexer->c;
 	str[1] = '\0';
 	return (str);
