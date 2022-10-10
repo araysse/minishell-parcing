@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/06 15:12:35 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/10 11:07:28 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	pr_struct(t_cmd *str)
 	printf("nanannanananaanan \n");
 }
 
-void	function(t_cmd **cmd, lexer_t **lexer, char **env, token_t **token)
+void	function(t_cmd **cmd, t_lexer **lexer, char **env, t_token **token)
 {
 	char	*str;
 	t_cmd	*new;
@@ -52,7 +52,7 @@ void	function(t_cmd **cmd, lexer_t **lexer, char **env, token_t **token)
 	str = NULL;
 	new = NULL;
 	t_redir *t = NULL;
-	while ((*token)->type != token_pipe)
+	while ((*token)->e_type != token_pipe)
 	{
 		if (is_redirection(*token))
 		{
@@ -71,12 +71,13 @@ void	function(t_cmd **cmd, lexer_t **lexer, char **env, token_t **token)
 	ft_lstnew(&new, redir, str);
 	ft_lstadd_back(cmd, new);
 	new->next = NULL;
-	str = NULL;
+	// str = NULL;
+	free(str);
 }
 
-void	ft_help_main2(t_cmd **cmd, lexer_t **lexer, char **env)
+void	ft_help_main2(t_cmd **cmd, t_lexer **lexer, char **env)
 {
-	token_t	*token;
+	t_token	*token;
 
 	token = NULL;
 	token = lexer_next((*lexer), env);
@@ -84,17 +85,18 @@ void	ft_help_main2(t_cmd **cmd, lexer_t **lexer, char **env)
 	{
 		function(&(*cmd), &(*lexer), env, &token);
 		if (token && token->value)
+		{
 			free(token->value);
-		free(token);
+			free(token);
+		}
 		token = lexer_next((*lexer), env);
-		// system("leaks minishell");
 	}
 }
 
 void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 {
 	char	*inpt;
-	lexer_t	*lexer;
+	t_lexer	*lexer;
 
 	lexer = NULL;
 	inpt = readline(YELLOW "bash-0.0 " WHITE);
@@ -115,6 +117,8 @@ void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 		// pr_struct(*cmd);
 		ft_free_struct(&(*cmd));
 	}
+	else
+		free(inpt);
 }
 
 int	main(int ac, char **av, char **env)

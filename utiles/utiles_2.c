@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utiles_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 11:29:38 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/09/24 09:01:37 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/07 22:07:45 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,15 @@ int	ft_is_n(char *str)
 			return (0);
 	}
 	return (1);
+}
+
+void	ft_free(char **str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
 }

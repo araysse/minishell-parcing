@@ -6,13 +6,13 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:23:22 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/05 09:41:12 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/09 23:44:08 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-int	ft_tstrncmp(const char *s1, const char *s2, size_t n)
+int	ft_tstrncmp(char *s1, char *s2, size_t n)
 {
 	size_t	i;
 
@@ -21,7 +21,9 @@ int	ft_tstrncmp(const char *s1, const char *s2, size_t n)
 		&& s1[i] && s2[i] && i < n - 1)
 		i++;
 	if (n > 0)
+	{
 		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	}
 	return (0);
 }
 
@@ -48,8 +50,8 @@ char	*ft_tstrjoin(char *s1, char *s2)
 	while (s2[lens1])
 		str[i++] = ((char *)s2)[lens1++];
 	str[i] = '\0';
-	free(s1);
-	free(s2);
+	if (s1)
+		free(s1);
 	return (str);
 }
 
@@ -106,8 +108,12 @@ char	*f_in_path(char **env, char *str)
 		i++;
 	}
 	if (!j)
-		save = ft_tsubstr(env[i], ft_tstrlen(arg), ft_tstrlen(env[i] + 5));
+	{
+		save = ft_strchr(env[i], '=');
+		save = ft_strdup(save + 1);
+	}
 	else
-		save = "";
+		save = NULL;
+	free(arg);
 	return (save);
 }

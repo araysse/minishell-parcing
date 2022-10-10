@@ -6,13 +6,13 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:06:52 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/05 14:40:20 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/10 11:03:47 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/shell.h"
 
-char	*lexer_collect_single_quot(lexer_t *lexer)
+char	*lexer_collect_single_quot(t_lexer *lexer)
 {
 	char	*v;
 	char	*s;
@@ -25,21 +25,23 @@ char	*lexer_collect_single_quot(lexer_t *lexer)
 		while (lexer->c != '\'')
 		{
 			if (lexer->contents[lexer->i + 1] == '\0')
-				return (ft_eror(1));
+				return (ft_eror(v, 1));
 			s = lxr_as_str(lexer);
 			v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
 			strcat(v, s);
+			free (s);
 			lexer_advance(lexer);
 		}
-		lexer_advance(lexer);
 	}
 	else
-		return (ft_eror(1));
+		return (ft_eror(v, 1));
 	return (v);
 }
 
-char	*ft_eror(int i)
+char	*ft_eror(char *s, int i)
 {
+	free(s);
+	(void)s;
 	if (i == 1)
 	{
 		printf("unclosed quots\n");
@@ -54,20 +56,18 @@ char	*ft_eror(int i)
 	return (0);
 }
 
-int	valid_char(lexer_t *lexer)
+int	valid_char(t_lexer *lexer)
 {
-	if (lexer->c != ' ' && lexer->c && lexer->c != '"'
-		&& lexer->c != '\'' && lexer->c != '<'
+	if (lexer->c != ' ' && lexer->c && lexer->c != '<'
 		&& lexer->c != '>' && lexer->c != '|')
 		return (1);
 	return (0);
 }
 
-token_t	*lexer_next(lexer_t *lexer, char **env)
+t_token	*lexer_next(t_lexer *lexer, char **env)
 {
 	while (lexer->c != '\0')
 	{
-
 		if (lexer->c == ' ' || lexer->c == 10)
 			lexer_skip_whitespace(lexer);
 		if (lexer->c == '<')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-aoun <yel-aoun@student.42.fr>          +#+  +:+       +#+        */
+/*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 10:36:08 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/10/04 18:34:12 by yel-aoun         ###   ########.fr       */
+/*   Updated: 2022/10/07 22:07:59 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,5 +169,8 @@ void	ft_help_check_access(char *arg, t_shell *shell);
 void	ft_help_print_err_fille(char *err);
 
 void	ft_exit_sig(char *str);
+
+char	*ft_find(char **new, char *find);
+void	ft_free(char **str);
 
 #endif
