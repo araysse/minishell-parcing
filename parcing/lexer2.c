@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:00:57 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:02:21 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:35:40 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_lexer	*init_lexer(char *contents)
 {
 	t_lexer	*lexer;
 
-	lexer = calloc(1, sizeof (struct lexer_struct));
+	lexer = ft_calloc(1, sizeof (struct lexer_struct));
 	lexer->contents = contents;
 	lexer->i = 0;
 	lexer->c = contents[lexer->i];
@@ -53,7 +53,8 @@ char	*lexer_collect_string(t_lexer *lexer, char **env)
 			if (lexer->contents[lexer->i + 1] == '\0' || lexer->c == '\0')
 				return (ft_eror(v, 1));
 			s = find_in_env(lexer, env);
-			v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
+			free(v);
+			v = malloc((ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
 			ft_strcat(v, s);
 			free(s);
 			lexer_advance(lexer);

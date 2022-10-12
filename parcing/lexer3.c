@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:08:22 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:03:47 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:36:04 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ t_token	*lexer_collect_id(t_lexer *lexer, char **env)
 			s = lexer_collect_string(lexer, env);
 		if (lexer->c == '\'')
 			s = lexer_collect_single_quot(lexer);
-		v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
+		free(v);
+		v = malloc((ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
 		ft_strcat(v, s);
 		if (s)
 			free(s);

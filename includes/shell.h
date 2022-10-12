@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 10:36:08 by yel-aoun          #+#    #+#             */
-/*   Updated: 2022/10/07 22:07:59 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 13:49:19 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct shell
 	int		t_sig_c;
 }			t_shell;
 
-int	g_glob[2];
+int	g_glob[3];
 
 //utiles/ft_tools.c
 int		ft_strcmp(char *s1, char *s2);

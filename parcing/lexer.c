@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:06:52 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:03:47 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:35:09 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*lexer_collect_single_quot(t_lexer *lexer)
 	char	*v;
 	char	*s;
 
-	v = calloc(1, sizeof(char));
+	v = ft_calloc(1, sizeof(char));
 	lexer_advance(lexer);
 	v[0] = '\0';
 	if (lexer->c)
@@ -27,7 +27,8 @@ char	*lexer_collect_single_quot(t_lexer *lexer)
 			if (lexer->contents[lexer->i + 1] == '\0')
 				return (ft_eror(v, 1));
 			s = lxr_as_str(lexer);
-			v = realloc(v, (ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
+			free(v);
+			v = malloc((ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
 			strcat(v, s);
 			free (s);
 			lexer_advance(lexer);

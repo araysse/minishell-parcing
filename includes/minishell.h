@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 12:06:37 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:17:58 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:17:44 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void			ft_lstadd_bak(t_redir **alst, t_redir *new);
 void			ft_lstnew(t_cmd **cmd, t_redir *redir, char *str);
 char			**ft_tsplit(char *s, char c);
 char			*ft_eror(char *s, int i);
-void			ft_after_pipe(t_lexer *lexer, t_token *token, char **env);
+void			ft_after_pipe(t_lexer **lexer, t_token *token, char **env);
 int				valid_char(t_lexer *lexer);
 void			ft_free_struct(t_cmd **cmd);
 void			ft_free2(t_redir **redir);
@@ -102,7 +102,7 @@ void			function(t_cmd **cmd, t_lexer **lexer \
 void			free_tok1(t_redir *redir, t_token *tok1);
 void			tok1_word(t_redir *redir, t_token *tok1, t_token *token);
 void			increment(t_token **tok1, t_lexer *lexer1, char **env);
-void			after_pipe(t_token **tok2, t_lexer *lexer2 \
+int				after_pipe(t_token **tok2, t_lexer *lexer2 \
 				, t_token *token, char **env);
 int				help_parce(t_token **tok3, t_lexer *lexer3);
 char			**hepl_split(char *s, char c, char **str, int k);

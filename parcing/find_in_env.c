@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:23:22 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/09 23:44:08 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/11 21:00:47 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ char	*ft_tstrjoin(char *s1, char *s2)
 	while (s2[lens1])
 		str[i++] = ((char *)s2)[lens1++];
 	str[i] = '\0';
-	if (s1)
-		free(s1);
+	free(s1);
+	free(s2);
 	return (str);
 }
 
@@ -99,7 +99,7 @@ char	*f_in_path(char **env, char *str)
 
 	j = 0;
 	i = 0;
-	arg = ft_tstrjoin(str, "=");
+	arg = ft_strjoin(str, "=");
 	while (env[i])
 	{
 		j = ft_tstrncmp(env[i], arg, ft_tstrlen(arg));
@@ -115,5 +115,6 @@ char	*f_in_path(char **env, char *str)
 	else
 		save = NULL;
 	free(arg);
+	free(str);
 	return (save);
 }

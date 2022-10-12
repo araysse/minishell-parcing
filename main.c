@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:07:28 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:31:14 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	pr_struct(t_cmd *str)
 		}
 		printf("infile : %d\n", cmd->infile);
 		printf("outfile : %d\n", cmd->outfile);
-		
 		while (cmd->redirection)
 		{
 			printf("redirection : %s\n", cmd->redirection->type);
@@ -51,14 +50,10 @@ void	function(t_cmd **cmd, t_lexer **lexer, char **env, t_token **token)
 	redir = NULL;
 	str = NULL;
 	new = NULL;
-	t_redir *t = NULL;
 	while ((*token)->e_type != token_pipe)
 	{
 		if (is_redirection(*token))
-		{
-			t = struct_redir((*token), (*lexer), env);
-			ft_lstadd_bak(&redir, t);
-		}
+			ft_lstadd_bak(&redir, struct_redir((*token), (*lexer), env));
 		else
 			str = struct_cmd((*lexer), (*token), str, env);
 		free (*token);
@@ -66,12 +61,11 @@ void	function(t_cmd **cmd, t_lexer **lexer, char **env, t_token **token)
 		if ((*token) == NULL)
 			break ;
 	}
-	if (*token)
-		ft_after_pipe((*lexer), (*token), env);
+	if (g_glob[2] == 0)
+		ft_after_pipe(lexer, (*token), env);
 	ft_lstnew(&new, redir, str);
 	ft_lstadd_back(cmd, new);
 	new->next = NULL;
-	// str = NULL;
 	free(str);
 }
 
@@ -83,7 +77,7 @@ void	ft_help_main2(t_cmd **cmd, t_lexer **lexer, char **env)
 	token = lexer_next((*lexer), env);
 	while (token != NULL)
 	{
-		function(&(*cmd), &(*lexer), env, &token);
+		function(cmd, lexer, env, &token);
 		if (token && token->value)
 		{
 			free(token->value);
@@ -109,13 +103,13 @@ void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 	{
 		add_history(inpt);
 		lexer = init_lexer(inpt);
-		ft_help_main2(&(*cmd), &lexer, shell->env);
+		ft_help_main2(cmd, &lexer, shell->env);
 		free(lexer->contents);
 		free(lexer);
 		// if (g_glob[0] == 0)
 		// 	ft_get_exec(shell, (*cmd));
-		// pr_struct(*cmd);
-		ft_free_struct(&(*cmd));
+		pr_struct(*cmd);
+		ft_free_struct(cmd);
 	}
 	else
 		free(inpt);
@@ -128,6 +122,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)(ac);
 	(void)(av);
+	g_glob[2] = 0;
 	cmd = NULL;
 	shell = malloc(sizeof(t_shell));
 	ft_init_env(shell, env);
@@ -138,6 +133,5 @@ int	main(int ac, char **av, char **env)
 		// signal(SIGINT, ft_sig_int);
 		// signal(SIGQUIT, SIG_IGN);
 		ft_help_main1(&cmd, shell);
-		system("leaks minishell");
 	}
 }

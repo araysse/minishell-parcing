@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 17:34:32 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:03:47 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/12 15:31:41 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ void	ft_free_struct(t_cmd **cmd)
 	t_cmd	*com;
 	t_redir	*red;
 
+	com = *cmd;
 	while ((*cmd))
 	{
 		com = (*cmd)->next;
 		i = 0;
 		while ((*cmd)->cmd[i])
-			free((*cmd)->cmd[i++]);
+			free(((*cmd)->cmd)[i++]);
 		free((*cmd)->cmd);
 		while ((*cmd)->redirection)
 		{
@@ -80,7 +81,6 @@ char	*struct_cmd(t_lexer *lexer, t_token *token, char *str, char **env)
 		s = ft_getchar(127);
 		str = ft_tstrjoin(str, token->value);
 		str = ft_tstrjoin(str, s);
-		free(s);
 	}
 	return (str);
 }
