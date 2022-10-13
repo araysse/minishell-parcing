@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 17:34:32 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/13 11:29:43 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/14 00:05:33 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,37 @@ int	word_size(char const *s, char c, int start)
 	return (len);
 }
 
+void	ft_free_redir(t_cmd **cmd)
+{
+	t_redir	*red;
+
+	while ((*cmd)->redirection)
+	{
+		red = (*cmd)->redirection->next;
+		free ((*cmd)->redirection->value);
+		free ((*cmd)->redirection->type);
+		free ((*cmd)->redirection);
+		(*cmd)->redirection = red;
+	}
+}
+
 void	ft_free_struct(t_cmd **cmd)
 {
 	int		i;
 	t_cmd	*com;
-	t_redir	*red;
 
 	com = *cmd;
 	while ((*cmd))
 	{
 		com = (*cmd)->next;
 		i = 0;
-		while ((*cmd)->cmd[i])
-			free(((*cmd)->cmd)[i++]);
-		free((*cmd)->cmd);
-		while ((*cmd)->redirection)
+		if ((*cmd)->cmd)
 		{
-			red = (*cmd)->redirection->next;
-			free ((*cmd)->redirection->value);
-			free ((*cmd)->redirection->type);
-			free ((*cmd)->redirection);
-			(*cmd)->redirection = red;
+			while ((*cmd)->cmd[i])
+				free(((*cmd)->cmd)[i++]);
 		}
+		free((*cmd)->cmd);
+		ft_free_redir(cmd);
 		free (*cmd);
 		(*cmd) = com;
 	}

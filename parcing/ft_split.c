@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 21:18:53 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 10:47:33 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 22:24:59 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	**ft_tsplit(char *s, char c)
 	int		k;
 	char	**str;
 
+	if (!s)
+		return (NULL);
 	if (!(s) || !s[0] || s[0] == 127)
 		return (return_impty());
 	str = malloc(sizeof(char *) * (count_word(s, c) + 1));

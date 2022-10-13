@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/13 20:26:35 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 23:54:20 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ void	pr_struct(t_cmd *str)
 	{
 		i = 0;
 		printf("########  STRUCT  ######\n");
+		if (cmd->cmd)
+		{	
 		while (cmd->cmd[i])
-		{
-			printf(" ---cmd[%d]--->   %s\n", i, cmd->cmd[i]);
-			i++;
+			{
+				printf(" ---cmd[%d]--->   %s\n", i, cmd->cmd[i]);
+				i++;
+			}
 		}
 		printf("infile : %d\n", cmd->infile);
 		printf("outfile : %d\n", cmd->outfile);
@@ -74,7 +77,6 @@ void	ft_help_main2(t_cmd **cmd, t_lexer **lexer, char **env)
 	t_token	*token;
 
 	token = NULL;
-	(void)cmd;
 	g_glob[2] = 0;
 	token = lexer_next((*lexer), env, 1);
 	while (token != NULL)
@@ -108,8 +110,8 @@ void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 		ft_help_main2(cmd, &lexer, shell->env);
 		free(lexer->contents);
 		free(lexer);
-		if (g_glob[0] == 0)
-			ft_get_exec(shell, (*cmd));
+		// if (g_glob[0] == 0)
+		// 	ft_get_exec(shell, (*cmd));
 		// pr_struct(*cmd);
 		ft_free_struct(cmd);
 	}
@@ -135,6 +137,5 @@ int	main(int ac, char **av, char **env)
 		// signal(SIGINT, ft_sig_int);
 		// signal(SIGQUIT, SIG_IGN);
 		ft_help_main1(&cmd, shell);
-		// system("leaks minishell");
 	}
 }
