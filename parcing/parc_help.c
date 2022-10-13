@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 17:34:32 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:31:41 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 11:29:43 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_free_struct(t_cmd **cmd)
 
 void	increment(t_token **tok1, t_lexer *lexer1, char **env)
 {
-	(*tok1) = lexer_next(lexer1, env);
+	(*tok1) = lexer_next(lexer1, env, 2);
 	free((*tok1)->value);
 	free (*tok1);
 }

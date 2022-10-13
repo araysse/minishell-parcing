@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 11:27:46 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:31:14 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 20:26:35 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	function(t_cmd **cmd, t_lexer **lexer, char **env, t_token **token)
 		else
 			str = struct_cmd((*lexer), (*token), str, env);
 		free (*token);
-		(*token) = lexer_next((*lexer), env);
+		(*token) = lexer_next((*lexer), env, 1);
 		if ((*token) == NULL)
 			break ;
 	}
@@ -74,16 +74,18 @@ void	ft_help_main2(t_cmd **cmd, t_lexer **lexer, char **env)
 	t_token	*token;
 
 	token = NULL;
-	token = lexer_next((*lexer), env);
+	(void)cmd;
+	g_glob[2] = 0;
+	token = lexer_next((*lexer), env, 1);
 	while (token != NULL)
 	{
 		function(cmd, lexer, env, &token);
-		if (token && token->value)
+		if (token)
 		{
 			free(token->value);
 			free(token);
 		}
-		token = lexer_next((*lexer), env);
+		token = lexer_next((*lexer), env, 1);
 	}
 }
 
@@ -106,9 +108,9 @@ void	ft_help_main1(t_cmd **cmd, t_shell *shell)
 		ft_help_main2(cmd, &lexer, shell->env);
 		free(lexer->contents);
 		free(lexer);
-		// if (g_glob[0] == 0)
-		// 	ft_get_exec(shell, (*cmd));
-		pr_struct(*cmd);
+		if (g_glob[0] == 0)
+			ft_get_exec(shell, (*cmd));
+		// pr_struct(*cmd);
 		ft_free_struct(cmd);
 	}
 	else
@@ -133,5 +135,6 @@ int	main(int ac, char **av, char **env)
 		// signal(SIGINT, ft_sig_int);
 		// signal(SIGQUIT, SIG_IGN);
 		ft_help_main1(&cmd, shell);
+		// system("leaks minishell");
 	}
 }

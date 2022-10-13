@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:00:57 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:35:40 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 20:16:12 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,29 +38,25 @@ void	lexer_skip_whitespace(t_lexer *lexer)
 		lexer_advance(lexer);
 }
 
-char	*lexer_collect_string(t_lexer *lexer, char **env)
+char	*lexer_collect_string(t_lexer *lexer, char **env, int k)
 {
 	char	*v;
 	char	*s;
 
-	v = malloc(sizeof(char));
+	v = NULL;
 	lexer_advance(lexer);
-	v[0] = '\0';
 	if (lexer->c)
 	{
 		while (lexer->c != '"')
 		{
 			if (lexer->contents[lexer->i + 1] == '\0' || lexer->c == '\0')
-				return (ft_eror(v, 1));
+				return (ft_eror(v, 1, k));
 			s = find_in_env(lexer, env);
-			free(v);
-			v = malloc((ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
-			ft_strcat(v, s);
-			free(s);
+			v = ft_tstrjoin(v, s);
 			lexer_advance(lexer);
 		}
 	}
 	else
-		return (ft_eror(v, 1));
+		return (ft_eror(v, 1, k));
 	return (v);
 }

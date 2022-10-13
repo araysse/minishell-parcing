@@ -6,7 +6,7 @@
 #    By: araysse <araysse@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/06 13:46:37 by yel-aoun          #+#    #+#              #
-#    Updated: 2022/10/11 20:53:08 by araysse          ###   ########.fr        #
+#    Updated: 2022/10/13 20:22:49 by araysse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ $(LIB) :
 	@cd libft && make
 
 $(NAME) : $(LIB) $(OBJ)
-	@$(CC) $(OBJ) $(LIB) -lreadline -o $(NAME) #-L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include 
+	@$(CC) $(OBJ) $(LIB) -lreadline -o $(NAME) #-L ~/goinfre/.brew/opt/readline/lib -I ~/goinfreπ/.brew/opt/readline/include 
 
 clean :
 	@rm -f $(OBJ) && cd libft && make clean

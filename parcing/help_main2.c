@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 18:57:50 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/10 11:11:14 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 11:30:26 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	col_redir(t_redir *redir, t_lexer *lexer, t_token *token, char **env)
 	lexer1 = init_lexer(lexer->contents);
 	while (lexer1->i < lexer->i)
 		increment(&tok1, lexer1, env);
-	tok1 = lexer_next(lexer1, env);
+	tok1 = lexer_next(lexer1, env, 2);
 	free(lexer1);
 	redir->type = token->value;
 	if (tok1 == NULL)
@@ -32,7 +32,7 @@ void	col_redir(t_redir *redir, t_lexer *lexer, t_token *token, char **env)
 		free_tok1(redir, tok1);
 	else if (tok1->e_type == token_word)
 	{
-		token = lexer_next(lexer, env);
+		token = lexer_next(lexer, env, 2);
 		tok1_word(redir, tok1, token);
 	}
 	if (tok1)

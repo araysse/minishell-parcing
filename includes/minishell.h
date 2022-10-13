@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 12:06:37 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:17:44 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 11:36:00 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ t_lexer			*init_lexer(char *contents);
 void			lexer_advance(t_lexer *lexer);
 
 void			lexer_skip_whitespace(t_lexer *lexer);
-t_token			*lexer_next(t_lexer *lexer, char **env);
-char			*lexer_collect_string(t_lexer *lexer, char **env);
-t_token			*lexer_collect_id(t_lexer *lexer, char **env);
+t_token			*lexer_next(t_lexer *lexer, char **env, int k);
+char			*lexer_collect_string(t_lexer *lexer, char **env, int k);
+t_token			*lexer_collect_id(t_lexer *lexer, char **env, int k);
 t_token			*lxr_ad_tok(t_lexer *lexer, t_token *token);
 char			*lxr_as_str(t_lexer	*lexer);
 t_token			*lexer_infile(t_lexer *lexer);
 t_token			*lexer_outfile(t_lexer *lexer);
-char			*lexer_collect_single_quot(t_lexer *lexer);
+char			*lexer_collect_single_quot(t_lexer *lexer, int k);
 char			*ft_strcat(char *dest, char *src);
 
 t_token			*init_tok(int type, char *value);
@@ -92,7 +92,7 @@ t_redir			*struct_redir(t_token *token, t_lexer *lexer, char **env);
 void			ft_lstadd_bak(t_redir **alst, t_redir *new);
 void			ft_lstnew(t_cmd **cmd, t_redir *redir, char *str);
 char			**ft_tsplit(char *s, char c);
-char			*ft_eror(char *s, int i);
+char			*ft_eror(char *s, int i, int k);
 void			ft_after_pipe(t_lexer **lexer, t_token *token, char **env);
 int				valid_char(t_lexer *lexer);
 void			ft_free_struct(t_cmd **cmd);

@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 18:57:43 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:32:09 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 15:06:54 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_after_pipe1(t_lexer **lexer, char **env)
 	t_lexer	*lexer3;
 
 	lexer3 = init_lexer((*lexer)->contents);
-	tok3 = lexer_next(lexer3, env);
+	tok3 = lexer_next(lexer3, env, 10);
 	if (tok3)
 		return (help_parce(&tok3, lexer3));
 	free(tok3->value);
@@ -58,20 +58,24 @@ void	ft_after_pipe(t_lexer **lexer, t_token *token, char **env)
 	lexer2 = init_lexer((*lexer)->contents);
 	while (lexer2->i < (*lexer)->i)
 	{
-		tok2 = lexer_next(lexer2, env);
+		tok2 = lexer_next(lexer2, env, 10);
 		free(tok2->value);
 		free (tok2);
 	}
 	if (token != NULL)
 		i = after_pipe(&tok2, lexer2, token, env);
 	if (i == 1)
+	{
+		free(tok2->value);
+		free (tok2);
 		g_glob[2] = 1;
+	}
 	free (lexer2);
 }
 
 int	after_pipe(t_token **tok2, t_lexer *lexer2, t_token *token, char **env)
 {
-	(*tok2) = lexer_next(lexer2, env);
+	(*tok2) = lexer_next(lexer2, env, 10);
 	if (token->e_type == token_pipe && !(*tok2) && g_glob[2] == 0)
 	{
 		printf("bash: syntax error near unexpected token `|'\n");

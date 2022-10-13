@@ -6,7 +6,7 @@
 /*   By: araysse <araysse@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 15:08:22 by araysse           #+#    #+#             */
-/*   Updated: 2022/10/12 15:36:04 by araysse          ###   ########.fr       */
+/*   Updated: 2022/10/13 18:55:53 by araysse          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,21 @@ t_token	*lxr_ad_tok(t_lexer *lexer, t_token *token)
 	return (token);
 }
 
-t_token	*lexer_collect_id(t_lexer *lexer, char **env)
+t_token	*lexer_collect_id(t_lexer *lexer, char **env, int k)
 {
 	char	*v;
 	char	*s;
 
-	v = ft_calloc(1, sizeof(char));
-	v[0] = '\0';
+	v = NULL;
 	while (valid_char(lexer))
 	{
 		if (lexer->c != '"' && lexer->c != '\'')
 			s = find_in_env2(lexer, env);
 		if (lexer->c == '"')
-			s = lexer_collect_string(lexer, env);
+			s = lexer_collect_string(lexer, env, k);
 		if (lexer->c == '\'')
-			s = lexer_collect_single_quot(lexer);
-		free(v);
-		v = malloc((ft_tstrlen(v) + ft_tstrlen(s) + 1) * sizeof(char));
-		ft_strcat(v, s);
-		if (s)
-			free(s);
+			s = lexer_collect_single_quot(lexer, k);
+		v = ft_tstrjoin(v, s);
 		lexer_advance(lexer);
 	}
 	return (init_tok(token_word, v));
